@@ -6,6 +6,7 @@ import { createServer } from 'node:http';
 // Must run before any src/ module is imported (config reads env at import).
 export function testEnv() {
   process.env.DATABASE_URL ??= 'postgres://vb_service:vb_service_test@127.0.0.1:5432/voice_bridge';
+  process.env.DISPATCHER_DATABASE_URL ??= 'postgres://vb_dispatcher:vb_dispatcher_test@127.0.0.1:5432/voice_bridge';
   process.env.ASR_PROVIDER = 'stub';
   process.env.INTENT_PROVIDER = 'lexicon';
   process.env.ARCHIVE_DRIVER = 'local';

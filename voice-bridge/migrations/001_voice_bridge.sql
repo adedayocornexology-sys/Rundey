@@ -125,6 +125,18 @@ create trigger charter_guard_ins
 
 -- The single sanctioned path for review decisions. Called by the dispatcher
 -- endpoint after a human acts in the dashboard.
+--
+-- CHARTER: this function deliberately CANNOT set status='confirmed'. The
+-- charter forbids this service from confirming orders; in Phase 1 'confirmed'
+-- is unreachable by anyone. (The outbound elder-confirmation step that would
+-- earn 'confirmed' is Phase 2 and must arrive as its own separately-gated
+-- migration, not by widening this function.) The highest status this service
+-- can drive an order to is 'approved'.
+--
+-- Defence in depth: EXECUTE is revoked from PUBLIC below and granted only to
+-- a dedicated dispatcher role/credential — NOT the telephony pipeline role.
+-- So even a compromised pipeline writer cannot approve/reject, only INSERT
+-- drafts (child.capabilities ⊆ parent.capabilities).
 create or replace function public.dispatcher_review(
   p_order_id          uuid,
   p_action            text,
@@ -141,8 +153,8 @@ declare
   v_nonce text;
   v_row   voice_orders;
 begin
-  if p_action not in ('approved','rejected','confirmed') then
-    raise exception 'dispatcher_review: invalid action %', p_action;
+  if p_action not in ('approved','rejected') then
+    raise exception 'dispatcher_review: invalid action % (confirmed is not reachable in Phase 1)', p_action;
   end if;
   if coalesce(trim(p_reviewer), '') = '' then
     raise exception 'dispatcher_review: reviewer identity is required';
@@ -169,3 +181,11 @@ begin
   return v_row;
 end;
 $$;
+
+-- Deny EXECUTE by default. The telephony/pipeline credential must NEVER be
+-- granted this. Grant it only to the dashboard's dedicated role/credential:
+--   grant execute on function public.dispatcher_review(uuid,text,text,text,text) to <dispatcher_role>;
+-- On Supabase, where the dashboard and pipeline both authenticate as
+-- service_role, run the dashboard against a distinct database role created for
+-- it (see migrations/local/000_roles.sql for the vb_dispatcher pattern).
+revoke all on function public.dispatcher_review(uuid, text, text, text, text) from public;

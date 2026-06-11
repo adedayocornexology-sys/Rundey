@@ -109,6 +109,22 @@ test('failure: empty/silent audio -> needs_callback', async () => {
   assert.deepEqual(order.items, []);
 });
 
+test('failure: recording download 404 -> call failed but a needs_callback work item is created', async () => {
+  const sessionId = uniqueSession('dl404');
+  const recording = await serveBuffer(Buffer.alloc(0), { status: 404 });
+  try {
+    const { call, order, error } = await processRecording({
+      sessionId, callerPhone: '+2348099999999', recordingUrl: recording.url,
+    });
+    assert.match(error, /download/);
+    assert.equal(call.status, 'failed');
+    assert.ok(order, 'a needs_callback order must exist so the elder is not dropped');
+    assert.equal(order.status, 'needs_callback');
+  } finally {
+    await recording.close();
+  }
+});
+
 test('failure: caller hangs up mid-recording -> partial saved and processed', async () => {
   const sessionId = uniqueSession('hangup');
   const audio = readFileSync(fixturePath('02-simple-iresi-kilo'));

@@ -1,6 +1,10 @@
 export const config = {
   port: Number(process.env.PORT || 8787),
   databaseUrl: process.env.DATABASE_URL || '',
+  // The dashboard connects as a dedicated role that may EXECUTE
+  // dispatcher_review; the pipeline (databaseUrl) may not. Falls back to
+  // databaseUrl only for single-role dev convenience.
+  dispatcherDatabaseUrl: process.env.DISPATCHER_DATABASE_URL || process.env.DATABASE_URL || '',
 
   // spitch | stub        (stub maps fixture audio hashes to canned transcripts)
   asrProvider: process.env.ASR_PROVIDER || 'stub',

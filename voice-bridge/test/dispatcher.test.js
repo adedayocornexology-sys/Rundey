@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { testEnv, uniqueSession } from './helpers.js';
 
 testEnv();
-const { query, closePool } = await import('../src/db.js');
+const { query, dispatcherQuery, closePool } = await import('../src/db.js');
 const { createApp } = await import('../src/index.js');
 
 const app = createApp();
@@ -81,7 +81,7 @@ test('dispatcher: reject path', async () => {
 
 test('dispatcher: double-review is refused', async () => {
   const order = await draftOrder();
-  await query(`select dispatcher_review($1, 'rejected', 'first')`, [order.id]);
+  await dispatcherQuery(`select dispatcher_review($1, 'rejected', 'first')`, [order.id]);
   const res = await app.request(`/dispatcher/orders/${order.id}/review`, {
     method: 'POST',
     headers: {

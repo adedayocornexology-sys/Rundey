@@ -3,18 +3,25 @@
 // clicking Approve here. Auth: Bearer DISPATCHER_TOKEN (or ?token= for the
 // audio elements, which can't set headers).
 import { Hono } from 'hono';
-import { query } from '../db.js';
+import { timingSafeEqual } from 'node:crypto';
+import { dispatcherQuery as query } from '../db.js';
 import { config } from '../config.js';
 import { createArchive } from '../services/archive.js';
 import { submitToRundey } from '../services/rundeyIntake.js';
 
 export const dispatcher = new Hono();
 
+function tokenMatches(provided) {
+  const a = Buffer.from(String(provided));
+  const b = Buffer.from(config.dispatcherToken);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
 dispatcher.use('*', async (c, next) => {
   if (!config.dispatcherToken) return c.json({ error: 'dispatcher disabled: DISPATCHER_TOKEN not set' }, 503);
   const header = c.req.header('authorization') ?? '';
   const token = header.replace(/^Bearer\s+/i, '') || c.req.query('token') || '';
-  if (token !== config.dispatcherToken) return c.json({ error: 'unauthorized' }, 401);
+  if (!tokenMatches(token)) return c.json({ error: 'unauthorized' }, 401);
   await next();
 });
 

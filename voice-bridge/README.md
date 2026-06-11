@@ -36,13 +36,26 @@ the strategic asset).
 ## Charter (Governance Tree)
 
 This service may **INSERT draft orders only**. It can never confirm, cancel,
-or modify confirmed orders. Enforced in the database by a SECURITY DEFINER
-trigger (`vb_private.charter_guard`) — not RLS, because the Supabase
-service role bypasses RLS but cannot bypass triggers. The only path to
-`approved/rejected/confirmed` is the `dispatcher_review()` function, invoked
-by the dispatcher dashboard after a human decision. `npm test` proves the
-service role cannot escalate (see `test/charter.test.js`, including a
-GUC-spoofing attempt).
+or modify confirmed orders. Three layers enforce this in the database — not in
+app code — because the Supabase service role bypasses RLS:
+
+1. **Trigger** (`vb_private.charter_guard`, SECURITY DEFINER): the only way to
+   set `status` to a privileged value is a secret transaction-local nonce that
+   just `dispatcher_review()` can read. Direct `UPDATE`/`INSERT` to
+   `approved`/`rejected` — even GUC-spoofing the nonce — is rejected.
+2. **Privilege split**: the telephony/pipeline role (`vb_service`) has **no
+   EXECUTE grant** on `dispatcher_review()`. It can only INSERT drafts. The
+   dispatcher dashboard connects as a distinct role (`vb_dispatcher`,
+   `DISPATCHER_DATABASE_URL`) that holds the grant. So even a compromised
+   pipeline writer cannot approve or reject.
+3. **`confirmed` is unreachable in Phase 1**: `dispatcher_review()` accepts
+   only `approved`/`rejected`. The elder-confirmation step that would earn
+   `confirmed` is Phase 2 and must ship as its own separately-gated migration.
+
+`npm test` proves all three (`test/charter.test.js`): the pipeline role gets
+`permission denied`, the GUC spoof fails, and the approve→confirm escalation
+cannot reach `confirmed`. This closes the defense-in-depth gap found in the
+adversarial verification pass.
 
 ## Stack
 
@@ -58,7 +71,10 @@ npm install
 npm run fixtures              # generate the synthetic eval suite
 npm run eval                  # extraction scorecard (gate: >= 8/10)
 bash scripts/setup-local-db.sh   # local Postgres mirroring Supabase semantics
-DATABASE_URL=postgres://vb_service:vb_service_test@127.0.0.1:5432/voice_bridge npm test
+# two roles: vb_service (pipeline, INSERT drafts) + vb_dispatcher (dashboard)
+DATABASE_URL=postgres://vb_service:vb_service_test@127.0.0.1:5432/voice_bridge \
+  DISPATCHER_DATABASE_URL=postgres://vb_dispatcher:vb_dispatcher_test@127.0.0.1:5432/voice_bridge \
+  npm test
 npm start                     # see src/config.js for all env vars
 ```
 
@@ -85,7 +101,10 @@ elder recordings and re-run against live Spitch + Haiku.
 4. Apply `migrations/001_voice_bridge.sql` to the RUNDEY Supabase project and
    create the `voice-audio` storage bucket (this session had no access to
    that project — migration is written for it but **not yet applied**).
-5. Name the Phase-1 dispatcher; set `DISPATCHER_TOKEN`.
+5. Name the Phase-1 dispatcher; set `DISPATCHER_TOKEN`. On Supabase, create a
+   dedicated database role for the dashboard and point `DISPATCHER_DATABASE_URL`
+   at it (see `migrations/local/000_roles.sql` for the `vb_dispatcher` pattern)
+   so the pipeline credential can never call `dispatcher_review()`.
 6. Consent script (`src/providers/tts/prompts.js`) is a DRAFT — legal +
    cultural review required before launch.
 

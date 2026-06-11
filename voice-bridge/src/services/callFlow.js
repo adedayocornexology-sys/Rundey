@@ -48,11 +48,16 @@ export async function processRecording({
     try {
       audio = await downloadRecording(recordingUrl);
     } catch (err) {
+      // Download failed: there is no audio to archive, but the caller still
+      // reached us — surface a callback work item so the elder isn't dropped.
       await query(
-        `update voice_calls set status='failed', recording_url=$2, ended_at=now() where id=$1`,
+        `update voice_calls set status='failed', asr_status='skipped', recording_url=$2, ended_at=now() where id=$1`,
         [call.id, recordingUrl],
       );
-      return { call: await getCall(call.id), order: null, error: `download: ${err.message}` };
+      const order = await insertOrder({
+        callId: call.id, callerPhone, items: [], confidence: 0, status: 'needs_callback',
+      });
+      return { call: await getCall(call.id), order, error: `download: ${err.message}` };
     }
   }
 
