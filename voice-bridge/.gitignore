@@ -1,0 +1,4 @@
+node_modules/
+var/
+assets/prompts/*.mp3
+.env

@@ -1,0 +1,52 @@
+{
+  "63dd43a437d8becab5f04e2edba13fb574b3e0ce88edf8e63284ab7bf51d7e12": {
+    "fixture": "01-simple-efo-epo",
+    "transcript": "Mo fẹ́ ra ẹ̀fọ́ méjì àti epo pupa kan",
+    "confidence": 0.93
+  },
+  "b4d315f407b77119e020a3852644dd81b13b74c306389f793647cfe8b512a787": {
+    "fixture": "02-simple-iresi-kilo",
+    "transcript": "Ẹ jọ̀wọ́, mo fẹ́ ra ìrẹsì kílò kan",
+    "confidence": 0.91
+  },
+  "eb31de1a1302c8e2b8ce9dbb6c1fa459e0735526232e045767087aed712953fb": {
+    "fixture": "03-simple-ata",
+    "transcript": "Mo fẹ́ ra ata mẹ́ta",
+    "confidence": 0.94
+  },
+  "37c122d13f9270326d5cc5233f37b66426e7097cf2783c9ada4e0a13103b42d2": {
+    "fixture": "04-multi-tomati-alubosa-ata",
+    "transcript": "Mo fẹ́ ra tòmátì mẹ́rin, àlùbọ́sà méjì àti ata kan",
+    "confidence": 0.89
+  },
+  "098bbc355bee5f3c8b2065ff9be6627369587591d2f6740d88872d430c78762b": {
+    "fixture": "05-multi-ewa-gaari-epo",
+    "transcript": "Ẹ bá mi ra ẹ̀wà kílò méjì, gaàrí kóńgò kan àti epo pupa ìgò kan",
+    "confidence": 0.88
+  },
+  "1c3d16386f72a10e0d5da920befbf2e8d29c440cf7019540663ed8a07a4f47ca": {
+    "fixture": "06-noisy-eja-iyo",
+    "transcript": "Mo fẹ́ ra ẹja méjì àti iyọ̀ kan",
+    "confidence": 0.74
+  },
+  "a3956065d720886720321ff6e5ecc9d07dabe864c0b564417b86583c4c755a8e": {
+    "fixture": "07-noisy-ogede-eran",
+    "transcript": "Mo fẹ́ ra ọ̀gẹ̀dẹ̀ mẹ́fà àti ẹran kílò kan",
+    "confidence": 0.71
+  },
+  "406c21863133228af4a3f725859900d4a7005365ff6fa3b8f8724e67e90ee945": {
+    "fixture": "08-codeswitch-rice-bread",
+    "transcript": "Mo fẹ́ ra rice kílò méjì àti bread kan",
+    "confidence": 0.86
+  },
+  "bff9ae2d1c0defb0f2b9070f43439fcb723621dbeb1cca5e2dbadcd9bfb13c68": {
+    "fixture": "09-empty-silence",
+    "transcript": "",
+    "confidence": 0
+  },
+  "425d2b3d69df758dd6ecc7f9b93afa6e11f1a7f0adda590bc261e6178b9280b4": {
+    "fixture": "10-greeting-no-order",
+    "transcript": "Ẹ káàsán o, báwo ni ẹ ṣe wà",
+    "confidence": 0.92
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "synthetic": true,
+  "kind": "non-order speech",
+  "transcript_yo": "Ẹ káàsán o, báwo ni ẹ ṣe wà",
+  "expect_order_row": true,
+  "expect_status": "needs_callback",
+  "items": []
+}

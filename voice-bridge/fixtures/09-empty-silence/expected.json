@@ -1,0 +1,8 @@
+{
+  "synthetic": true,
+  "kind": "empty/silence",
+  "transcript_yo": "",
+  "expect_order_row": true,
+  "expect_status": "needs_callback",
+  "items": []
+}

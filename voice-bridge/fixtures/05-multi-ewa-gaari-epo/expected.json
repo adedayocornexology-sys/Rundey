@@ -1,0 +1,24 @@
+{
+  "synthetic": true,
+  "kind": "multi-item with quantities + units",
+  "transcript_yo": "Ẹ bá mi ra ẹ̀wà kílò méjì, gaàrí kóńgò kan àti epo pupa ìgò kan",
+  "expect_order_row": true,
+  "expect_status": "pending_review",
+  "items": [
+    {
+      "unit": "kilo",
+      "name_en": "beans",
+      "qty": 2
+    },
+    {
+      "unit": "congo",
+      "name_en": "garri",
+      "qty": 1
+    },
+    {
+      "unit": "bottle",
+      "name_en": "palm oil",
+      "qty": 1
+    }
+  ]
+}

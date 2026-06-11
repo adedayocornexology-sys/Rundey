@@ -1,0 +1,21 @@
+{
+  "name": "rundey-voice-bridge",
+  "version": "0.1.0",
+  "description": "Yoruba voice ordering line for elders in Owo — RUNDEY Voice Bridge",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "fixtures": "node scripts/make-fixtures.js",
+    "eval": "node eval/run-eval.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "author": "Cornelius Adedayo — MoyaCode",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@hono/node-server": "^2.0.4",
+    "hono": "^4.12.25",
+    "pg": "^8.21.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "synthetic": true,
+  "kind": "multi-item with quantities",
+  "transcript_yo": "Mo fẹ́ ra tòmátì mẹ́rin, àlùbọ́sà méjì àti ata kan",
+  "expect_order_row": true,
+  "expect_status": "pending_review",
+  "items": [
+    {
+      "unit": null,
+      "name_en": "tomato",
+      "qty": 4
+    },
+    {
+      "unit": null,
+      "name_en": "onion",
+      "qty": 2
+    },
+    {
+      "unit": null,
+      "name_en": "pepper",
+      "qty": 1
+    }
+  ]
+}

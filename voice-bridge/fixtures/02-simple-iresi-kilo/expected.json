@@ -1,0 +1,14 @@
+{
+  "synthetic": true,
+  "kind": "clean simple order",
+  "transcript_yo": "Ẹ jọ̀wọ́, mo fẹ́ ra ìrẹsì kílò kan",
+  "expect_order_row": true,
+  "expect_status": "pending_review",
+  "items": [
+    {
+      "unit": "kilo",
+      "name_en": "rice",
+      "qty": 1
+    }
+  ]
+}
